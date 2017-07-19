@@ -1,3 +1,7 @@
+/*
+Using a hash table
+*/
+
 import java.io.*;
 import java.util.*;
 
