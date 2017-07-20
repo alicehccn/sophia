@@ -1,11 +1,12 @@
+import java.io.*;
+import java.util.*;
+
 /*
 Using a hash table
 */
 
-import java.io.*;
-import java.util.*;
+public class Anagram {
 
-public class Solution {
     static boolean isAnagram(String a, String b) {
         a = a.toLowerCase();
         b = b.toLowerCase();
