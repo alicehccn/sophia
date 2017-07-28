@@ -57,8 +57,6 @@ class Number:
             self.add_and(index, num)
             self.data += self.table.get(num[index-1:]) + ' '
         elif self.table.get(num[index-1]+'0'):
-            # if index > 1:
-            #     self.data += 'and '
             self.add_and(index, num)
             self.data += self.table.get(num[index-1]+'0') + ' '
             self.get_ones(index, num)
