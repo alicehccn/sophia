@@ -40,20 +40,38 @@ class Stack:
          return len(self.items)
 
 
-def get_hundreds(parts, index, num):
-    parts += table.get(num[index-2])
-    parts += ' hundred '
-    parts += 'and'
-    return parts
+class Number:
+    def __init__(self):
+        self.data = ''
 
+    def get_hundreds(self, index, num):
+        # import pdb; pdb.set_trace()
+        if table.get(num[index-2]):
+            self.data += table.get(num[index-2])
+            self.data += ' '
+            self.data += 'hundred '
+        return self.data
 
-def get_tens(parts, index, num):
-    try:
-        parts += table.get(num) + ' '
-    except:
-        parts += ' ' + table[num[index-1]+'0'] + ' '
-        parts += table[num[index]] + ' '
-    return parts
+    def get_tens(self, index, num):
+        # if index > 2:
+        #     self.data += 'and '
+        if table.get(num[index-1:]):
+            self.data += table.get(num[index-1:]) + ' '
+        elif table.get(num[index-1]+'0'):
+            self.data += table.get(num[index-1]+'0') + ' '
+        return self.data
+
+    def get_ones(self, index, num):
+        if table.get(num[index]):
+            self.data += table.get(num[index]) + ' '
+        return self.data
+
+    def merge(self, index, num):
+        return self.get_hundreds(index, num) + self.get_tens(index, num) + self.get_ones(index, num)
+
+    def append_place(self, index, place):
+        self.data += place[index] + ' '
+        return self.data
 
 
 def prompt():
@@ -67,6 +85,7 @@ def prompt():
 
 def main():
     num = prompt()
+    # num = 1003232012
     num = str(num)
     chunks = Stack()
 
@@ -74,20 +93,19 @@ def main():
     for i in range(len(num)-1, 0, -3):
         if i < 2:
             break
-        parts = ''
-        hundreds = get_hundreds(parts, i, num)
-        tens = get_tens(parts, i, num)
-        parts = hundreds + tens
-        parts += places[j] + ' '
+        parts = Number()
+        parts.merge(i, num)
+        parts.append_place(j, places)
         num = num[:i-2]
-        chunks.push(parts)
+        chunks.push(parts.data)
         j += 1
 
     for i in range(len(num), 0, -2):
-        parts = ''
-        parts += get_tens(parts, i-1, num)
-        parts += places[j] + ' '
-        chunks.push(parts)
+        parts = Number()
+        parts.get_tens(i-1, num)
+        parts.get_ones(i-1, num)
+        parts.append_place(j, places)
+        chunks.push(parts.data)
         j += 1
 
     output = 'The answer is: '
