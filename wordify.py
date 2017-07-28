@@ -5,11 +5,9 @@ import math
 """
 
 A translation game, from numeric to English words
+eg: 1003232012 --> ONE BILLION THREE MILLION TWO HUNDRED THIRTY TWO TWELVE TWO
 
 """
-
-
-
 
 class Stack:
      def __init__(self):
@@ -56,20 +54,26 @@ class Number:
 
     def get_tens(self, index, num):
         if self.table.get(num[index-1:]):
+            if index > 1:
+                self.data += 'and '
             self.data += self.table.get(num[index-1:]) + ' '
         elif self.table.get(num[index-1]+'0'):
+            if index > 1:
+                self.data += 'and '
             self.data += self.table.get(num[index-1]+'0') + ' '
+            self.data += self.get_ones(index, num)
+        elif num[index-1] == '0' and num[index] != '0':
+            self.data += self.get_ones(index, num)
         return self.data
 
     def get_ones(self, index, num):
-        if index < 1:
-            return self.data
         if self.table.get(num[index]):
             self.data += self.table.get(num[index]) + ' '
         return self.data
 
     def merge(self, index, num):
-        return self.get_hundreds(index, num) + self.get_tens(index, num) + self.get_ones(index, num)
+        return self.get_hundreds(index, num) + \
+               self.get_tens(index, num)
 
     def add_place(self, index):
         self.data += self.place[index] + ' '
@@ -87,29 +91,28 @@ def prompt():
 
 def main():
     num = prompt()
-    # num = 1003232012
     num = str(num)
     chunks = Stack()
 
-    j = 0
+    place_index = 0
     for i in range(len(num)-1, 0, -3):
         if i < 2:
             break
         parts = Number()
         parts.merge(i, num)
         if i <= 3 and num[i-2:] != '000':
-            parts.add_place(j)
+            parts.add_place(place_index)
         num = num[:i-2]
         chunks.push(parts.data)
-        j += 1
+        place_index += 1
 
 
     for i in range(len(num), 0, -2):
         parts = Number()
         parts.get_tens(i-1, num)
-        parts.add_place(j)
+        parts.add_place(place_index)
         chunks.push(parts.data)
-        j += 1
+        place_index += 1
 
     output = 'The answer is: '
     for _ in range(chunks.size()):
