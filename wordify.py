@@ -97,10 +97,12 @@ def main():
             break
         parts = Number()
         parts.merge(i, num)
-        parts.append_place(j, places)
+        if i <= 3 and num[i-2:] != '000':
+            parts.append_place(j, places)
         num = num[:i-2]
         chunks.push(parts.data)
         j += 1
+
 
     for i in range(len(num), 0, -2):
         parts = Number()
