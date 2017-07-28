@@ -75,7 +75,6 @@ def main():
     for i in range(len(num), 0, -2):
         parts = ''
         parts += get_tens(parts, i-1, num)
-        import pdb; pdb.set_trace()
         parts += places[j] + ' '
         chunks.push(parts)
         j += 1
