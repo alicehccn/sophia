@@ -45,7 +45,6 @@ class Number:
         self.data = ''
 
     def get_hundreds(self, index, num):
-        # import pdb; pdb.set_trace()
         if table.get(num[index-2]):
             self.data += table.get(num[index-2])
             self.data += ' '
@@ -53,8 +52,6 @@ class Number:
         return self.data
 
     def get_tens(self, index, num):
-        # if index > 2:
-        #     self.data += 'and '
         if table.get(num[index-1:]):
             self.data += table.get(num[index-1:]) + ' '
         elif table.get(num[index-1]+'0'):
@@ -107,7 +104,6 @@ def main():
     for i in range(len(num), 0, -2):
         parts = Number()
         parts.get_tens(i-1, num)
-        parts.get_ones(i-1, num)
         parts.append_place(j, places)
         chunks.push(parts.data)
         j += 1
