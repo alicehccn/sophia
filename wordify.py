@@ -1,5 +1,7 @@
 from __future__ import print_function
 
+import math
+
 """
 
 A translation game, from numeric to English words
@@ -15,6 +17,8 @@ table = {
     '60': 'sixty', '70': 'seventy', '80': 'eighty', '90': 'ninety',
     '0': '', '00': ''
 }
+places = ['', 'thousand', 'million', 'billion', 'trillion']
+
 
 class Stack:
      def __init__(self):
@@ -52,12 +56,19 @@ def get_tens(parts, index, num):
     return parts
 
 
-def main():
+def prompt():
     num = input('\nEnter a number: ')
-    chunks = Stack()
+    if math.log10(num) > 14:
+        print('Please make sure number is valid.')
+        print('Constraint: number <= 10**14.\n')
+        return prompt()
+    return num
 
-    places = ['', 'thousand', 'million', 'billion', 'trillion']
+
+def main():
+    num = prompt()
     num = str(num)
+    chunks = Stack()
 
     j = 0
     for i in range(len(num)-1, 0, -3):
