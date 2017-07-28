@@ -1,9 +1,8 @@
 from __future__ import print_function
 
 """
-A translation game, from numeric to English words
-12   234   567
 
+A translation game, from numeric to English words
 
 """
 
@@ -54,8 +53,7 @@ def get_tens(parts, index, num):
 
 
 def main():
-    # num = input('\nEnter a number: ')
-    num = 9878675
+    num = input('\nEnter a number: ')
     chunks = Stack()
 
     places = ['', 'thousand', 'million', 'billion', 'trillion']
@@ -73,7 +71,7 @@ def main():
         num = num[:i-2]
         chunks.push(parts)
         j += 1
-        
+
     for i in range(len(num), 0, -2):
         parts = ''
         parts += get_tens(parts, i-1, num)
