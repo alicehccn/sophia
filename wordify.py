@@ -62,6 +62,8 @@ class Number:
         return self.data
 
     def get_ones(self, index, num):
+        if index < 1:
+            return self.data
         if table.get(num[index]):
             self.data += table.get(num[index]) + ' '
         return self.data
