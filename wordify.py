@@ -5,20 +5,9 @@ import math
 """
 
 A translation game, from numeric to English words
+eg: 1003232012 --> ONE BILLION THREE MILLION TWO HUNDRED AND THIRTY TWO THOUSAND AND TWELVE
 
 """
-
-table = {
-    '1': 'one', '2': 'two', '3': 'three', '4': 'four', '5': 'five',
-    '6': 'six', '7': 'seven', '8': 'eight', '9': 'nine', '10': 'ten',
-    '11': 'eleven', '12': 'twelve', '13': 'thirteen', '14': 'fourteen', '15': 'fifteen',
-    '16': 'sixteen', '17': 'seventeen', '18': 'eighteen', '19': 'nineteen',
-    '20': 'twenty', '30': 'thirty', '40': 'forty', '50': 'fifty',
-    '60': 'sixty', '70': 'seventy', '80': 'eighty', '90': 'ninety',
-    '0': '', '00': ''
-}
-places = ['', 'thousand', 'million', 'billion', 'trillion']
-
 
 class Stack:
      def __init__(self):
@@ -41,36 +30,56 @@ class Stack:
 
 
 class Number:
+    table = {
+        '1': 'one', '2': 'two', '3': 'three', '4': 'four', '5': 'five',
+        '6': 'six', '7': 'seven', '8': 'eight', '9': 'nine', '10': 'ten',
+        '11': 'eleven', '12': 'twelve', '13': 'thirteen', '14': 'fourteen', '15': 'fifteen',
+        '16': 'sixteen', '17': 'seventeen', '18': 'eighteen', '19': 'nineteen',
+        '20': 'twenty', '30': 'thirty', '40': 'forty', '50': 'fifty',
+        '60': 'sixty', '70': 'seventy', '80': 'eighty', '90': 'ninety',
+        '0': '', '00': ''
+    }
+
+    place = ['', 'thousand', 'million', 'billion', 'trillion']
+
     def __init__(self):
         self.data = ''
 
     def get_hundreds(self, index, num):
-        # import pdb; pdb.set_trace()
-        if table.get(num[index-2]):
-            self.data += table.get(num[index-2])
+        if self.table.get(num[index-2]):
+            self.data += self.table.get(num[index-2])
             self.data += ' '
             self.data += 'hundred '
         return self.data
 
     def get_tens(self, index, num):
-        # if index > 2:
-        #     self.data += 'and '
-        if table.get(num[index-1:]):
-            self.data += table.get(num[index-1:]) + ' '
-        elif table.get(num[index-1]+'0'):
-            self.data += table.get(num[index-1]+'0') + ' '
+        if self.table.get(num[index-1:]):
+            self.add_and(index, num)
+            self.data += self.table.get(num[index-1:]) + ' '
+        elif self.table.get(num[index-1]+'0'):
+            self.add_and(index, num)
+            self.data += self.table.get(num[index-1]+'0') + ' '
+            self.get_ones(index, num)
+        elif num[index-1] == '0' and num[index] != '0':
+            self.get_ones(index, num)
         return self.data
 
     def get_ones(self, index, num):
-        if table.get(num[index]):
-            self.data += table.get(num[index]) + ' '
+        if self.table.get(num[index]):
+            self.data += self.table.get(num[index]) + ' '
         return self.data
 
     def merge(self, index, num):
-        return self.get_hundreds(index, num) + self.get_tens(index, num) + self.get_ones(index, num)
+        return self.get_hundreds(index, num) + \
+               self.get_tens(index, num)
 
-    def append_place(self, index, place):
-        self.data += place[index] + ' '
+    def add_place(self, index):
+        self.data += self.place[index] + ' '
+        return self.data
+
+    def add_and(self, index, num):
+        if index > 1 and num[index-2:] != '000':
+            self.data += 'and '
         return self.data
 
 
@@ -85,28 +94,28 @@ def prompt():
 
 def main():
     num = prompt()
-    # num = 1003232012
     num = str(num)
     chunks = Stack()
 
-    j = 0
+    place_index = 0
     for i in range(len(num)-1, 0, -3):
         if i < 2:
             break
         parts = Number()
         parts.merge(i, num)
-        parts.append_place(j, places)
+        if num[i-2:] != '000':
+            parts.add_place(place_index)
         num = num[:i-2]
         chunks.push(parts.data)
-        j += 1
+        place_index += 1
+
 
     for i in range(len(num), 0, -2):
         parts = Number()
         parts.get_tens(i-1, num)
-        parts.get_ones(i-1, num)
-        parts.append_place(j, places)
+        parts.add_place(place_index)
         chunks.push(parts.data)
-        j += 1
+        place_index += 1
 
     output = 'The answer is: '
     for _ in range(chunks.size()):
