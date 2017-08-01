@@ -7,6 +7,9 @@ import math
 A translation game, from numeric to English words
 eg: 1003232012 --> ONE BILLION THREE MILLION TWO HUNDRED AND THIRTY TWO THOUSAND AND TWELVE
 
+To do:
+1. One million one
+
 """
 
 class Stack:

@@ -1,6 +1,13 @@
 from __future__ import print_function
 from collections import defaultdict
 
+"""
+Todo:
+
+1. Use a different data structure: Tries
+
+"""
+
 
 def parse_txt(filename):
     with open(filename, 'r') as f:
