@@ -77,7 +77,9 @@ class Graph {
                 var next = this.adjacentList[current][j][0];
                 var cost = this.adjacentList[current][j][1];
                 var newLen = cost + this.distance[current];
-                this.distance[next] = newLen;
+                if (!this.visited[next] && newLen < this.distance[next]) {
+                    this.distance[next] = newLen;
+                }
             }
         }
         if (this.distance[dst] < Number.MAX_SAFE_INTEGER)
@@ -88,4 +90,3 @@ class Graph {
 }
 
 console.log(findCheapestPrice(n, flights, src, dst, K))
-
