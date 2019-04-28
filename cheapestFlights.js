@@ -8,18 +8,29 @@
  https://leetcode.com/problems/cheapest-flights-within-k-stops/submissions/
  */
 
-var n = 10
-var flights = [[3,4,4],[2,5,6],[4,7,10],[9,6,5],[7,4,4],[6,2,10],[6,8,6],[7,9,4],[1,5,4],[1,0,4],[9,7,3],[7,0,5],[6,5,8],[1,7,6],[4,0,9],[5,9,1],[8,7,3],[1,2,6],[4,1,5],[5,2,4],[1,9,1],[7,8,10],[0,4,2],[7,2,8]]
-var src = 6
-var dst = 0
-var K = 7
+// var n = 4
+// var flights = [[0,1,1],[0,2,5],[1,2,1],[2,3,1]]
+// var src = 0
+// var dst = 3
+// var K = 1
+
+// var n = 3
+// var flights = [[0,1,100],[1,2,100],[0,2,500]]
+// var src = 0
+// var dst = 2
+// var K = 1
+
+var n = 5
+var flights = [[0,1,5],[1,2,5],[0,3,2],[3,1,2],[1,4,1],[4,2,1]]
+var src = 0
+var dst = 2
+var K = 2
 
 var findCheapestPrice = function(n, flights, src, dst, K) {
     var g = new Graph(n);
     for (var i = 0; i < flights.length; i++) {
         var [city1, city2, weight] = flights[i];
-        g.addEdge(city1, city2);
-        g.addAdjacent(city1, city2, weight);
+        g.addEdge(flights[i]);
     }
     return g.findShortestPath(src, dst, K);
 };
@@ -29,64 +40,35 @@ class Graph {
     constructor(nodes) {
         this.nodes = nodes;
         this.graph = [];
-        this.adjacentList = {};
-        // a hack for class var in JS
-        this.distance = new Array(this.nodes);
-        this.visited = new Array(this.nodes);
+        this.costs = new Array(this.nodes);
     }
     
-    addEdge(node1, node2) {
-        this.graph.push(node1, node2)
-    }
-    
-    addAdjacent(src, dst, weight) {
-        if (this.adjacentList[src])
-            this.adjacentList[src].push([dst, weight])
-        else
-            this.adjacentList[src] = [[dst, weight]]
-    }
-    
-    minDistance() {
-        var min = Number.MAX_SAFE_INTEGER;
-        var minIndex = -1;
-        
-        for (var i = 0; i < this.distance.length; i++) {
-            if (!this.visited[i] && this.distance[i] <= min) {
-                min = this.distance[i];
-                minIndex = i;
-            }
-        }
-        return minIndex;
+    addEdge(edge) {
+        this.graph.push(edge)
     }
     
     findShortestPath(src, dst, K) {
-        for (var i = 0; i < this.nodes; i++) {
-            this.distance[i] = Number.MAX_SAFE_INTEGER;
-            this.visited[i] = false;
-        }
-        
-        this.distance[src] = 0;
-        
-        for (var i = 0; i < this.nodes; i++) {
-            var current = this.minDistance();
-            console.log(current)
-            this.visited[current] = true;
-            if (i == K+1) break;
-            if (!this.adjacentList[current]) continue;
-            for (var j = 0; j < this.adjacentList[current].length; j++) {
-                var next = this.adjacentList[current][j][0];
-                var cost = this.adjacentList[current][j][1];
-                var newLen = cost + this.distance[current];
-                if (!this.visited[next] && newLen < this.distance[next]) {
-                    this.distance[next] = newLen;
-                }
+        this.costs.fill(Number.MAX_SAFE_INTEGER);
+        this.costs[src] = 0;
+
+        for(var i = 0; i <= K; i++) {
+            var nextCosts = this.costs.slice();
+            for(var j = 0; j < this.graph.length; j++) {
+                var currentNode = this.graph[j][0];
+                var nextNode = this.graph[j][1];
+                var cost = this.graph[j][2];
+                var newCost;
+                if (this.costs[currentNode] == Number.MAX_SAFE_INTEGER)
+                    newCost = Number.MAX_SAFE_INTEGER;
+                else
+                    newCost = this.costs[currentNode] + cost;
+                nextCosts[nextNode] = Math.min(nextCosts[nextNode], newCost)
             }
+            this.costs = nextCosts;
         }
-        if (this.distance[dst] < Number.MAX_SAFE_INTEGER)
-             return this.distance[dst];
-        else
-            return -1;
+        return this.costs[dst] == Number.MAX_SAFE_INTEGER ? -1 : this.costs[dst];
     }
+
 }
 
 console.log(findCheapestPrice(n, flights, src, dst, K))
