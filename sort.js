@@ -1,21 +1,27 @@
-function mergeSort(n, arr) {
+function mergeSort(arr) {
+	if (arr.length < 2)
+		return;
 
-	// find the middle point
-	var middle = Math.ceil(n / 2);
+	var middle = Math.ceil(arr.length/2);
 	var left = arr.slice(0, middle);
-	var right = arr.slice(middle, arr.length);
-	console.log(left, right)
+	var right = arr.slice(middle, arr.length)
+	console.log('array:' +arr)
+	console.log('left: ', left, 'right: ', right)
+	mergeSort(left);
+	mergeSort(right);
 
-	// call mergeSort on left side
-
-
-	// call mergeSort on right side
-
-	// merge two arrays
-
-
+	merge(left, right);
 }
 
-var n = 10
+function merge(left, right) {
+	var maxLen = Math.max(left.length, right.length);
+	
+
+	
+	var result = left.concat(right);
+	console.log('rrrrr',result)
+	return result;
+}
+
 var arr = [10, 9, 8, 7, 6, 5, 4, 3, 2, 1]
-console.log(mergeSort(n, arr))
+console.log(mergeSort(arr))
