@@ -1,27 +1,52 @@
 function mergeSort(arr) {
-	if (arr.length < 2)
-		return;
+	if (arr.length < 2) return;
 
-	var middle = Math.ceil(arr.length/2);
-	var left = arr.slice(0, middle);
-	var right = arr.slice(middle, arr.length)
-	console.log('array:' +arr)
-	console.log('left: ', left, 'right: ', right)
+	var m = arr.length/2;
+	var left = arr.slice(0, m);
+	var right = arr.slice(m, arr.length)
+
 	mergeSort(left);
 	mergeSort(right);
 
-	merge(left, right);
+	return merge(arr, left, right);
+	
 }
 
-function merge(left, right) {
-	var maxLen = Math.max(left.length, right.length);
-	
+function merge(arr, left, right) {
+	var i = 0;
+	var j = 0;
+	var k = 0;
 
-	
-	var result = left.concat(right);
-	console.log('rrrrr',result)
-	return result;
+	while (i < left.length && j < right.length) {
+		if (left[i] <= right[j]) {
+			arr[k] = left[i];
+			i++;
+		} else {
+			arr[k] = right[j];
+			j++;
+		}
+		k++;
+	}
+	while (i < left.length) {
+		arr[k] = left[i];
+		i++;
+		k++;
+	}
+
+	while (j < right.length) {
+		arr[k] = right[j];
+		j++;
+		k++;
+	}
+
+	return arr;
 }
 
-var arr = [10, 9, 8, 7, 6, 5, 4, 3, 2, 1]
-console.log(mergeSort(arr))
+
+function main() {
+	var arr = [10, 9, 8, 7, 6, 5, 4, 3, 2, 1];
+	var result = mergeSort(arr)
+	console.log(result);
+}
+
+main();
